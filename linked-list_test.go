@@ -3,6 +3,8 @@ package dsa
 import (
 	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 var list *MyLinkedList
@@ -76,4 +78,42 @@ func TestCase2(t *testing.T) {
 	list.AddAtHead(1) // 17514
 	list.DeleteAtIndex(4)
 	fmt.Println(list)
+}
+
+type LinkedListTestSuite struct {
+	suite.Suite
+	list *MyLinkedList
+}
+
+func (suite *LinkedListTestSuite) SetupTest() {
+	list := Constructor()
+	suite.list = &list
+}
+
+func (suite *LinkedListTestSuite) TestGet() {
+	suite.Equal(-1, suite.list.Get(5), "not exist index return -1")
+	suite.Equal(-1, suite.list.Get(-1), "not exist index return -1")
+}
+
+func (suite *LinkedListTestSuite) TestAddAtHead() {
+	suite.list.AddAtHead(5)
+	suite.Equal(5, suite.list.Get(0), "return add at head value")
+	suite.list.AddAtHead(1)
+	suite.Equal(1, suite.list.Get(0), "return add at head value")
+}
+
+func (suite *LinkedListTestSuite) TestInsert() {
+	suite.list.Insert(2, 5)
+	suite.Equal(-1, suite.list.Get(0), "insert out range nothing happened")
+	suite.list.Insert(0, 1)
+	suite.Equal(1, suite.list.Get(0), "insert at the header")
+	suite.list.Insert(0, 2)
+	suite.Equal(2, suite.list.Get(0), "insert at the header")
+
+	suite.list.Insert(2, 3)
+	suite.Equal(3, suite.list.Get(2), "insert at the tailer")
+}
+
+func TestLinkedList(t *testing.T) {
+	suite.Run(t, new(LinkedListTestSuite))
 }

@@ -27,10 +27,11 @@ func Constructor() MyLinkedList {
 	}
 }
 
+// Get return the i'th node value, if index out range then return -1
 func (ll *MyLinkedList) Get(i int) (value int) {
 
-	if i > ll.Len-1 {
-		panic("index out of range")
+	if i > ll.Len-1 || i < 0 {
+		return -1
 	}
 
 	return ll.getByIndex(i).Value
@@ -59,20 +60,22 @@ func (ll *MyLinkedList) getByIndex(i int) *Node {
 	return dummy
 }
 
-func (ll *MyLinkedList) Insert(i int, value int) {
+// Insert the value node in index'th, if i greater then list'size, it do nothing
+func (ll *MyLinkedList) Insert(index int, value int) {
 
-	if i > ll.Len {
-		panic("index out of range")
-	}
-
-	// just as append action
-	if i == ll.Len {
+	switch {
+	case index > ll.Len:
+		return
+	case index == 0:
+		ll.AddAtHead(value)
+		return
+	case index == ll.Len:
 		ll.AddAtTail(value)
 		return
 	}
 
 	node := newNode(value)
-	preNode := ll.getByIndex(i - 1)
+	preNode := ll.getByIndex(index - 1)
 
 	node.Next = preNode.Next
 	preNode.Next = node
